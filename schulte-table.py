@@ -1,7 +1,31 @@
 #!/usr/bin/env python3
+# author: joez
 
 import sys
 import random
+import argparse
+
+
+def parse_args():
+    p = argparse.ArgumentParser(
+        description='A Schulte Table generator', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    p.add_argument('-v', '--version', action='version',
+                   version='%(prog)s 0.1.0')
+    p.add_argument('-r', '--rows', help='table rows', type=int, default=4)
+    p.add_argument('-c', '--cols', help='table columns', type=int, default=4)
+    p.add_argument('-n', '--nums', help='number of tables',
+                   type=int, default=5)
+
+    return p.parse_args()
+
+
+def main():
+    args = parse_args()
+    grids = [gen_grid(rows=args.rows, cols=args.cols)
+             for i in range(args.nums)]
+    print_grids(grids)
+    save_grids(grids)
+
 
 def save_grids(grids, file="schulte-table.xlsx"):
     try:
@@ -45,7 +69,7 @@ def save_grids(grids, file="schulte-table.xlsx"):
 
 def gen_grid(rows=4, cols=4):
     '''
-    Generate a Schulte Grid with given cols and rows
+    Generate a Schulte Table with given cols and rows
     The result is a 2D array (list of rows)
     '''
     nums = list(range(1, cols * rows + 1))
@@ -64,10 +88,4 @@ def print_grids(grids):
 
 
 if __name__ == "__main__":
-    rows = int(sys.argv[1]) if len(sys.argv) > 1 else 4
-    cols = int(sys.argv[2]) if len(sys.argv) > 2 else rows
-    nums = int(sys.argv[3]) if len(sys.argv) > 3 else 5
-
-    grids = [gen_grid(rows=rows, cols=cols) for i in range(nums)]
-    print_grids(grids)
-    save_grids(grids)
+    main()
